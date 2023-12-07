@@ -39,6 +39,62 @@ RSpec.describe "Cats", type: :request do
   
       # Assure that the created cat has the correct attributes
       expect(cat.name).to eq 'Buster'
+      expect(cat.age).to eq 4
+      expect(cat.enjoy).to eq 'Meow Mix, and plenty of sunshine.'
+      expect(cat.image).to eq 'https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80'
     end
   end
-end
+
+  describe "Patch /update" do
+    it "updates a cat" do
+      cat_params = {
+        cat: {
+          name: 'Buster',
+          age: 6,
+          enjoy: 'Swordplay and yelling HOOOOO!!!',
+          image: 'https://numeralpaint.com/wp-content/uploads/2021/07/lionel-thundercat-paint-by-numbers.jpg'
+        }
+      }
+      post '/cats', params: cat_params
+      cat = Cat.first
+
+      updated_params = {
+        cat: {
+          name: 'Lion-O',
+          age: 6,
+          enjoy: 'Swordplay and yelling HOOOOO!!!',
+          image: 'https://numeralpaint.com/wp-content/uploads/2021/07/lionel-thundercat-paint-by-numbers.jpg'
+        }
+      }
+
+      patch "/cats/#{cat.id}", params: updated_params
+
+      updated_cat = Cat.find(cat.id)
+      expect(response).to have_http_status 200
+      expect(updated_cat.name).to eq "Lion-O"
+    end
+  end 
+
+  describe "Delete /destroy" do
+    it "deletes a cat" do
+      cat_params = {
+        cat: {
+          name: 'Buster',
+          age: 4,
+          enjoy: 'Meow Mix, and plenty of sunshine.',
+          image: 'https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80'
+        }
+      }
+
+      post '/cats', params: cat_params
+      cat = Cat.first
+
+      delete "/cats/#{cat.id}"
+      
+      expect(response).to have_http_status (200)
+      cats=Cat.all
+      expect(cats).to be_empty
+      
+    end
+  end 
+end 
