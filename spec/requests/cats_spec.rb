@@ -97,4 +97,188 @@ RSpec.describe "Cats", type: :request do
       
     end
   end 
+      it "doesn't create a cat without a name" do 
+        cat_params = {
+          cat: {
+            age: 7,
+            enjoy: 'hunting lizards',
+            image: 'meek.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['name']).to include "can't be blank"
+      end
+
+      it "doesn't create a cat without an age" do 
+        cat_params = {
+          cat: {
+            name: "garfield",
+            enjoy: 'eating lasagnia',
+            image: 'garfield.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['age']).to include "can't be blank"
+      end
+
+      it "doesn't create a cat without an enjoy" do 
+        cat_params = {
+          cat: {
+            name: "felix",
+            age: 8,
+            image: 'felix.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['enjoy']).to include "can't be blank"
+      end
+
+      it "doesn't create a cat without an image" do 
+        cat_params = {
+          cat: {
+            name: "felix",
+            age: 8,
+            enjoy: 'walks in the park'
+          }
+        }
+
+        post "/cats", params: cat_params
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['image']).to include "can't be blank"
+      end
+
+      it "doesn't update a cat without a name" do
+        cat_params = {
+          cat: {
+            name: "carl",
+            age: 5,
+            enjoy: 'scratching my post',
+            image: 'carl.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+        cat = Cat.first
+
+        updated_params = {
+          cat: {
+            name: "",
+            age: 3,
+            enjoy: 'getting scratchies from owner',
+            image: 'carl.jpeg'
+          }
+        }
+
+        patch "/cats/#{cat.id}", params: updated_params
+        cat = Cat.find(cat.id)
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['name']).to include "can't be blank"
+      end
+
+      it "doesn't update a cat without an age" do
+        cat_params = {
+          cat: {
+            name: "carl",
+            age: 5,
+            enjoy: 'scratching my post',
+            image: 'carl.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+        cat = Cat.first
+
+        updated_params = {
+          cat: {
+            name: "carl",
+            age: nil,
+            enjoy: 'getting scratchies from owner',
+            image: 'carl.jpeg'
+          }
+        }
+
+        patch "/cats/#{cat.id}", params: updated_params
+        cat = Cat.find(cat.id)
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['age']).to include "can't be blank"
+      end
+
+      it "doesn't update a cat without an enjoy" do
+        cat_params = {
+          cat: {
+            name: "carl",
+            age: 5,
+            enjoy: 'scratching my post',
+            image: 'carl.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+        cat = Cat.first
+
+        updated_params = {
+          cat: {
+            name: "carl",
+            age: 6,
+            enjoy: "",
+            image: 'carl.jpeg'
+          }
+        }
+
+        patch "/cats/#{cat.id}", params: updated_params
+        cat = Cat.find(cat.id)
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['enjoy']).to include "can't be blank"
+      end
+
+      it "doesn't update a cat without an image" do
+        cat_params = {
+          cat: {
+            name: "carl",
+            age: 5,
+            enjoy: 'scratching my post',
+            image: 'carl.jpeg'
+          }
+        }
+
+        post "/cats", params: cat_params
+        cat = Cat.first
+
+        updated_params = {
+          cat: {
+            name: "carl",
+            age: 6,
+            enjoy: "",
+            image: ""
+          }
+        }
+
+        patch "/cats/#{cat.id}", params: updated_params
+        cat = Cat.find(cat.id)
+
+        expect(response.status).to eq 422
+        json = JSON.parse(response.body)
+        expect(json['image']).to include "can't be blank"
+      end
+    
 end 
