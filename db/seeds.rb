@@ -3,7 +3,7 @@ cats = [
         name: 'Blackwell',
         age: 4,
         enjoy: 'long walks on the beach',
-        image: 'https://twitter.com/susantananda3/status/1330866962675625988/photo/1'
+        image: 'https://pbs.twimg.com/media/EngwcYLVoAEhlvF?format=jpg&name=900x900'
     },
     {
         name: 'Ash',
